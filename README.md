@@ -25,7 +25,7 @@ TensorFlow и PyTorch на примере задач классификации 
 
 1. Клонируйте проект с GitHub:
    ```bash
-   git clone https://github.com/ThesisML.git
+   git clone https://github.com/AGMalkov/ThesisML.git
    ```
 
 2. Перейдите в папку проекта:
