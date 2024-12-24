@@ -1,3 +1,7 @@
+"""
+Скрипт для построения, обучения и оценки модели регрессии на основе PyTorch.
+"""
+
 import pandas as pd
 import torch
 from torch import nn, optim
@@ -11,14 +15,26 @@ import os
 DATA_PATH = "data/house_prices.csv"
 RESULTS_PATH = "results/house_price_pytorch_metrics.json"
 
-# 1. Загрузка данных
 def load_data():
+    """
+    Загружает данные из файла CSV.
+
+    Возвращает:
+        pd.DataFrame: Исходные данные.
+    """
     data = pd.read_csv(DATA_PATH)
     return data
 
-# 2. Предобработка данных
 def preprocess_data(data):
-    # Удаление ненужного столбца Id
+    """
+    Предобрабатывает данные для модели.
+
+    Параметры:
+        data (pd.DataFrame): Исходные данные.
+
+    Возвращает:
+        tuple: Признаки (X), целевая переменная (y), среднее и стандартное отклонение целевой переменной.
+    """
     if "Id" in data.columns:
         data = data.drop("Id", axis=1)
 
@@ -47,8 +63,14 @@ def preprocess_data(data):
 
     return X, y, y_mean, y_std
 
-# 3. Построение модели
 class HousePriceModel(nn.Module):
+    """
+    Модель для прогнозирования цен на жильё с использованием PyTorch.
+
+    Архитектура:
+    - Три скрытых слоя с функцией активации ReLU.
+    - Выходной слой для регрессии.
+    """
     def __init__(self, input_dim):
         super(HousePriceModel, self).__init__()
         self.layer1 = nn.Linear(input_dim, 128)
@@ -63,8 +85,18 @@ class HousePriceModel(nn.Module):
         x = self.output(x)
         return x
 
-# 4. Обучение модели
 def train_model(model, X_train, y_train, criterion, optimizer, epochs=200):
+    """
+    Обучает модель на тренировочных данных.
+
+    Параметры:
+        model (nn.Module): Модель для обучения.
+        X_train (torch.Tensor): Признаки тренировочной выборки.
+        y_train (torch.Tensor): Целевая переменная тренировочной выборки.
+        criterion: Функция потерь.
+        optimizer: Оптимизатор.
+        epochs (int): Количество эпох.
+    """
     for epoch in range(epochs):
         model.train()
         optimizer.zero_grad()
@@ -77,8 +109,20 @@ def train_model(model, X_train, y_train, criterion, optimizer, epochs=200):
         if (epoch + 1) % 10 == 0:
             print(f"Эпоха {epoch + 1}/{epochs}, Потери: {loss.item()}")
 
-# 5. Оценка модели
 def evaluate_model(model, X_test, y_test, y_mean, y_std):
+    """
+    Оценивает производительность модели.
+
+    Параметры:
+        model (nn.Module): Обученная модель.
+        X_test (torch.Tensor): Признаки тестовой выборки.
+        y_test (torch.Tensor): Целевая переменная тестовой выборки.
+        y_mean (float): Среднее целевой переменной.
+        y_std (float): Стандартное отклонение целевой переменной.
+
+    Возвращает:
+        dict: Метрики производительности (MSE, MAE, R2).
+    """
     with torch.no_grad():
         model.eval()
         y_pred = model(X_test).squeeze().detach().numpy()
@@ -92,14 +136,22 @@ def evaluate_model(model, X_test, y_test, y_mean, y_std):
     }
     return metrics
 
-# 6. Сохранение метрик
 def save_metrics(metrics, path):
+    """
+    Сохраняет метрики в JSON-файл.
+
+    Параметры:
+        metrics (dict): Метрики производительности.
+        path (str): Путь для сохранения.
+    """
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w") as f:
         json.dump(metrics, f, indent=4)
 
-# Основной скрипт
 if __name__ == "__main__":
+    """
+    Основной скрипт для выполнения предобработки данных, обучения и оценки модели.
+    """
     # Загрузка данных
     data = load_data()
 

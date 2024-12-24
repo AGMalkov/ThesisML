@@ -1,3 +1,7 @@
+"""
+Скрипт для построения, обучения и оценки модели регрессии на основе Scikit-learn.
+"""
+
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
@@ -5,19 +9,30 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import json
 import os
 
-# Путь к данным
+# Пути
 DATA_PATH = "data/house_prices.csv"
 RESULTS_PATH = "results/house_price_sklearn_metrics.json"
 
-# 1. Загрузка данных
 def load_data():
+    """
+    Загружает данные из файла CSV.
+
+    Возвращает:
+        pd.DataFrame: Исходные данные.
+    """
     data = pd.read_csv(DATA_PATH)
     return data
 
-
-# 2. Предобработка данных
 def preprocess_data(data):
-    # Удаление неинформативного столбца Id
+    """
+    Предобрабатывает данные для модели.
+
+    Параметры:
+        data (pd.DataFrame): Исходные данные.
+
+    Возвращает:
+        tuple: Признаки (X) и целевая переменная (y).
+    """
     if "Id" in data.columns:
         data = data.drop("Id", axis=1)
 
@@ -35,15 +50,33 @@ def preprocess_data(data):
     y = data["SalePrice"]
     return X, y
 
-
-# 3. Обучение модели
 def train_model(X_train, y_train):
+    """
+    Обучает линейную регрессию на тренировочных данных.
+
+    Параметры:
+        X_train (pd.DataFrame): Признаки тренировочной выборки.
+        y_train (pd.Series): Целевая переменная тренировочной выборки.
+
+    Возвращает:
+        LinearRegression: Обученная модель.
+    """
     model = LinearRegression()
     model.fit(X_train, y_train)
     return model
 
-# 4. Оценка модели
 def evaluate_model(model, X_test, y_test):
+    """
+    Оценивает производительность модели.
+
+    Параметры:
+        model (LinearRegression): Обученная модель.
+        X_test (pd.DataFrame): Признаки тестовой выборки.
+        y_test (pd.Series): Целевая переменная тестовой выборки.
+
+    Возвращает:
+        dict: Метрики производительности (MSE, MAE, R2).
+    """
     y_pred = model.predict(X_test)
     metrics = {
         "mean_squared_error": mean_squared_error(y_test, y_pred),
@@ -52,14 +85,22 @@ def evaluate_model(model, X_test, y_test):
     }
     return metrics
 
-# 5. Сохранение метрик
 def save_metrics(metrics, path):
+    """
+    Сохраняет метрики в JSON-файл.
+
+    Параметры:
+        metrics (dict): Метрики производительности.
+        path (str): Путь для сохранения.
+    """
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w") as f:
         json.dump(metrics, f, indent=4)
 
-# Основной скрипт
 if __name__ == "__main__":
+    """
+    Основной скрипт для выполнения предобработки данных, обучения и оценки модели.
+    """
     # Загрузка данных
     data = load_data()
     print("Первые строки данных:")
