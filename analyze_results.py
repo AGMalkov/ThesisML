@@ -9,6 +9,15 @@ OUTPUT_FILE = "results_summary.csv"
 
 # Сбор метрик из файлов
 def collect_metrics(results_dir):
+    """
+    Собирает метрики из JSON-файлов в указанной директории.
+
+    Параметры:
+        results_dir (str): Путь к директории, содержащей файлы с метриками.
+
+    Возвращает:
+        pd.DataFrame: Таблица с собранными метриками, включая задачи и библиотеки.
+    """
     all_metrics = []
     for filename in os.listdir(results_dir):
         if filename.endswith(".json"):
@@ -29,11 +38,28 @@ def collect_metrics(results_dir):
 
 # Нормализация данных (Min-Max Scaling)
 def normalize_data(df):
-    # Применяем Min-Max нормализацию (переводим все значения в диапазон от 0 до 1)
+    """
+    Применяет нормализацию Min-Max к данным, преобразуя их значения в диапазон [0, 1].
+
+    Параметры:
+        df (pd.DataFrame): Таблица с метриками.
+
+    Возвращает:
+        pd.DataFrame: Нормализованные данные.
+    """
     return (df - df.min()) / (df.max() - df.min())
 
 # Визуализация метрик
 def visualize_metrics(df):
+    """
+    Визуализирует метрики для каждой задачи и сохраняет графики в папке results/.
+
+    Параметры:
+        df (pd.DataFrame): Таблица с собранными метриками, содержащая задачи и библиотеки.
+
+    Возвращает:
+        None
+    """
     # Определяем метрики для каждой задачи
     task_metrics = {
         "titanic": ["accuracy", "precision", "recall", "f1_score"],
@@ -96,6 +122,15 @@ def visualize_metrics(df):
 
 # Основной скрипт
 if __name__ == "__main__":
+    """
+    Выполняет сбор метрик, сохранение сводной таблицы и визуализацию результатов.
+
+    Параметры:
+        None
+
+    Возвращает:
+        None
+    """
     # Сбор данных
     metrics_df = collect_metrics(RESULTS_DIR)
 
