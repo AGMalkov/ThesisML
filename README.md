@@ -51,8 +51,13 @@ TensorFlow и PyTorch на примере задач классификации 
 
 Запуск основного скрипта для одной из моделей:
 ```bash
-python models/titanic_binary_classification/main.py
+python models/titanic_binary_classification/scikit_learn_main.py
 ```
+
+## Демонстрация работы
+
+### Результаты выполнения скрипта `scikit_learn_main.py`
+![](screenshots/scikit_learn_main.png)
 
 Пример использования:
 ```python
@@ -76,14 +81,31 @@ print(f"Accuracy: {accuracy}")
 ### Классификация Titanic
 - Используются библиотеки Scikit-learn, TensorFlow и PyTorch.
 - Оценка метрик: Accuracy, Precision, Recall, F1-Score.
+- Визуализация: график сравнения метрик для всех библиотек (Titanic).
+
+![](results/titanic_metrics_comparison.png)
 
 ### Классификация Iris
 - Реализация многоклассовой классификации с использованием логистической регрессии и нейронных сетей.
 - Применение функции потерь CrossEntropyLoss (PyTorch) и CategoricalCrossentropy (TensorFlow).
+- Визуализация: график сравнения метрик для Iris.
+
+![](results/iris_metrics_comparison.png)
 
 ### Регрессия House Prices
 - Прогнозирование цен на жильё.
 - Метрики: Mean Squared Error, Mean Absolute Error, R² Score.
+- Визуализация: график сравнения метрик для House Prices.
+
+![](results/house_metrics_comparison.png)
+
+### Дополнительный функционал
+- Генерация сводной таблицы с метриками: `results_summary.csv`.
+- Анализ производительности библиотек по времени обучения.
+- Сравнение гибкости библиотек на основе реализованных моделей.
+
+### Пример файла `results_summary.csv`
+![](screenshots/results_summary.png)
 
 ---
 
